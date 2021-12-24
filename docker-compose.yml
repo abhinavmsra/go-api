@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: api
+      POSTGRES_DB: api_development
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  app:
+    build: 
+      context: .
+      target: release
+    ports:
+      - 8080:8080
+
+volumes:
+  pg_data:
