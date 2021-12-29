@@ -9,7 +9,7 @@ RUN go get -d -v ./...
 
 # ---- Dev ----
 FROM base AS dev
-CMD go run -race .
+CMD go get -d -v ./...  && go run ./...
 
 # ---- Test ----
 FROM base AS test
