@@ -17,6 +17,11 @@ func (s *Storage) ShowMerchant(id string) *sql.Row {
 	return s.db.QueryRow(query, id)
 }
 
+func (s *Storage) FindMerchantBySecret(secret string) *sql.Row {
+	query := `SELECT * FROM "merchants" WHERE "merchants"."api_secret" = $1 LIMIT 1;`
+	return s.db.QueryRow(query, secret)
+}
+
 func (s *Storage) UpdateMerchant(id string, name string) *sql.Row {
 	query := `UPDATE "merchants" SET name = $2 WHERE "merchants"."id" = $1;`
 	return s.db.QueryRow(query, id, name)

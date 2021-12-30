@@ -35,9 +35,5 @@ func (s *Storage) RunMigrations(connectionString string) error {
 		return err
 	}
 
-	if err = m.Up(); err.Error() == "no change" {
-		return nil
-	}
-
-	return err
+	return m.Up()
 }

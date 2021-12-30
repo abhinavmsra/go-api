@@ -29,7 +29,7 @@ func run() error {
 	err = storage.RunMigrations(connectionString)
 
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 
 	server := app.NewServer(storage)

@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS "members"(
     updated_at          timestamptz NOT NULL DEFAULT now(),
     name                varchar(255) NOT NULL UNIQUE,
     api_secret          varchar(255) NOT NULL UNIQUE,
+    email               varchar(255) NOT NULL UNIQUE,
     merchant_id         integer NOT NULL, 
     FOREIGN KEY ("merchant_id") REFERENCES "public"."merchants"("id") ON UPDATE restrict ON DELETE restrict
 );
