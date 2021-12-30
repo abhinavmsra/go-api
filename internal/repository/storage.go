@@ -11,19 +11,19 @@ import (
 	"runtime"
 )
 
-type storage struct {
+type Storage struct {
 	db *sql.DB
 }
 
-func NewStorage(db *sql.DB) storage {
-	return storage{db: db}
+func NewStorage(db *sql.DB) Storage {
+	return Storage{db: db}
 }
 
-func (s *storage) RunMigrations(connectionString string) error {
+func (s *Storage) RunMigrations(connectionString string) error {
 	if connectionString == "" {
 		return errors.New("repository: the connString was empty")
 	}
-	
+
 	// get base path
 	_, b, _, _ := runtime.Caller(0)
 	basePath := filepath.Join(filepath.Dir(b), "../..")
@@ -35,14 +35,9 @@ func (s *storage) RunMigrations(connectionString string) error {
 		return err
 	}
 
-	err = m.Up()
-
-	switch err {
-	case errors.New("no change"):
+	if err = m.Up(); err.Error() == "no change" {
 		return nil
 	}
 
 	return err
 }
-
-func (s *storage) RunSeeds() {}

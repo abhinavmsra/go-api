@@ -26,17 +26,13 @@ func run() error {
 	}
 
 	storage := repository.NewStorage(db)
-
 	err = storage.RunMigrations(connectionString)
 
 	if err != nil {
 		panic(err)
 	}
 
-	return nil
-
-	// setup app server
-	server := app.NewServer()
+	server := app.NewServer(storage)
 	return server.Run()
 }
 

@@ -1,19 +1,22 @@
 package app
 
 import (
+	"github.com/abhinavmsra/go-api/internal/repository"
 	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
-	Router *gin.Engine
+	Storage repository.Storage
+	router  *gin.Engine
 }
 
-func NewServer() *Server {
+func NewServer(storage repository.Storage) *Server {
 	return &Server{
-		Router: Router(),
+		Storage: storage,
 	}
 }
 
 func (s *Server) Run() error {
-	return s.Router.Run()
+	r := s.Routes()
+	return r.Run()
 }
