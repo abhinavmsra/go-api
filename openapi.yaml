@@ -1,0 +1,497 @@
+---
+openapi: 3.0.1
+info:
+  title: Golang API
+  version: v1
+  description: This is an API to manage merchants
+paths:
+  "/api/v1/merchants":
+    get:
+      summary: Fetch merchants
+      tags:
+      - merchants
+      description: This endpoint returns merchants
+      parameters:
+      - name: page
+        in: query
+        description: 'Pagination Params: Page Number'
+        schema:
+          type: string
+      - name: per_page
+        in: query
+        description: 'Pagination Params: Page Size'
+        schema:
+          type: string
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Merchants
+          content:
+            application/json:
+              example:
+                data:
+                - id: '1'
+                  type: merchants
+                  attributes:
+                    name: Google
+                    api_secret: XXXXX
+                    created_at: 1640834398
+                    updated_at: 1640834398
+                - id: '2'
+                  type: merchants
+                  attributes:
+                    name: Apple
+                    api_secret: XXXXX
+                    created_at: 1640834498
+                    updated_at: 1640834498
+              schema:
+                "$ref": "#/components/schemas/merchant_collection_response"
+    post:
+      summary: Create a merchant
+      tags:
+      - merchants
+      description: This endpoint creates a merchant
+      parameters: []
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Create merchant
+          content:
+            application/json:
+              example:
+                data:
+                  id: '1'
+                  type: merchants
+                  attributes:
+                    name: Apple
+                    api_secret: XXXXX
+                    created_at: 1640834498
+                    updated_at: 1640834498
+              schema:
+                "$ref": "#/components/schemas/merchant_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/merchant_response"
+  "/api/v1/merchants/{id}":
+    get:
+      summary: Fetch merchant details
+      tags:
+      - merchants
+      description: This endpoint returns merchant details
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Merchants
+          content:
+            application/json:
+              example:
+                data:
+                  id: '1'
+                  type: merchants
+                  attributes:
+                    name: Apple
+                    api_secret: XXXXX
+                    created_at: 1640834498
+                    updated_at: 1640834498
+              schema:
+                "$ref": "#/components/schemas/merchant_response"
+    patch:
+      summary: Update a merchant
+      tags:
+      - merchants
+      description: This endpoint updates a merchant
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Create merchant
+          content:
+            application/json:
+              example:
+                data:
+                  id: '1'
+                  type: merchants
+                  attributes:
+                    name: Apple
+                    api_secret: XXXXX
+                    created_at: 1640834498
+                    updated_at: 1640834498
+              schema:
+                "$ref": "#/components/schemas/merchant_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/merchant_response"            
+    delete:
+      summary: Delete a merchant
+      tags:
+      - merchants
+      description: This endpoint deletes a merchant
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: Delete a merchant
+          
+  "/api/v1/members":
+    get:
+      summary: Fetch members
+      tags:
+      - members
+      description: This endpoint returns members
+      parameters:
+      - name: page
+        in: query
+        description: 'Pagination Params: Page Number'
+        schema:
+          type: string
+      - name: per_page
+        in: query
+        description: 'Pagination Params: Page Size'
+        schema:
+          type: string
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Members
+          content:
+            application/json:
+              example:
+                data:
+                - id: '1'
+                  type: members
+                  attributes:
+                    name: Google
+                    email: hey@google.com
+                    api_secret: XXXXX
+                    merchant_id: 1
+                    created_at: 1640834398
+                    updated_at: 1640834398
+                - id: '2'
+                  type: members
+                  attributes:
+                    name: Apple
+                    email: hey@apple.com
+                    api_secret: XXXXX
+                    merchant_id: 1
+                    created_at: 1640834498
+                    updated_at: 1640834498
+              schema:
+                "$ref": "#/components/schemas/member_collection_response"
+    post:
+      summary: Create a member
+      tags:
+      - members
+      description: This endpoint creates a member
+      parameters: []
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Create member
+          content:
+            application/json:
+              example:
+                data:
+                  id: '1'
+                  type: member
+                  attributes:
+                    name: Apple
+                    email: hey@apple.com
+                    api_secret: XXXXX
+                    merchant_id: 1
+                    created_at: 1640834498
+                    updated_at: 1640834498
+              schema:
+                "$ref": "#/components/schemas/member_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/member_response"
+  "/api/v1/members/{id}":
+    get:
+      summary: Fetch member details
+      tags:
+      - members
+      description: This endpoint returns member details
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Members
+          content:
+            application/json:
+              example:
+                data:
+                  id: '1'
+                  type: members
+                  attributes:
+                    name: Google
+                    email: hey@google.com
+                    api_secret: XXXXX
+                    merchant_id: 1
+                    created_at: 1640834398
+                    updated_at: 1640834398
+              schema:
+                "$ref": "#/components/schemas/member_response"
+    patch:
+      summary: Update a member
+      tags:
+      - members
+      description: This endpoint updates a member
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Update merchant
+          content:
+            application/json:
+              example:
+                data:
+                  id: '1'
+                  type: merchants
+                  attributes:
+                    name: Google
+                    email: hey@google.com
+                    api_secret: XXXXX
+                    merchant_id: 1
+                    created_at: 1640834398
+                    updated_at: 1640834398
+              schema:
+                "$ref": "#/components/schemas/member_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/member_response"            
+    delete:
+      summary: Delete a member
+      tags:
+      - members
+      description: This endpoint deletes a member
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: Delete a member
+servers:
+- url: http://localhost:8080
+  description: Development Server
+components:
+  schemas:
+    merchant_collection_response:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - type
+            - attributes
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+                enum:
+                - merchants
+              attributes:
+                type: object
+                required:
+                - name
+                - api_secret
+                - created_at
+                - updated_at
+                properties:
+                  name:
+                    type: string
+                    description: Name of a merchant
+                  api_secret:
+                    type: string
+                    description: API secret for a merchant (required for api calls)
+                  created_at:
+                    type: string
+                    description: Created at timestamp
+                  updated_at:
+                    type: string
+                    description: Updated at timestamp
+    merchant_response:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - id
+          - type
+          - attributes
+          properties:
+            id:
+              type: string
+            type:
+              type: string
+              enum:
+              - blog
+            attributes:
+              type: object
+              required:
+              - name
+              - api_secret
+              - created_at
+              - updated_at
+              properties:
+                name:
+                  type: string
+                  description: Name of a merchant
+                api_secret:
+                  type: string
+                  description: API secret for a merchant (required for api calls)
+                created_at:
+                  type: string
+                  description: Created at timestamp
+                updated_at:
+                  type: string
+                  description: Updated at timestamp
+    member_collection_response:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - type
+            - attributes
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+                enum:
+                - members
+              attributes:
+                type: object
+                required:
+                - name
+                - email
+                - api_secret
+                - merchant_id
+                - created_at
+                - updated_at
+                properties:
+                  name:
+                    type: string
+                    description: Name of a member
+                  email:
+                    type: string
+                    description: Email of a member
+                  api_secret:
+                    type: string
+                    description: API secret for a member (required for api calls)
+                  merchant_id:
+                    type: string
+                    description: Parent Merchant
+                  created_at:
+                    type: string
+                    description: Created at timestamp
+                  updated_at:
+                    type: string
+                    description: Updated at timestamp
+    member_response:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - id
+          - type
+          - attributes
+          properties:
+            id:
+              type: string
+            type:
+              type: string
+              enum:
+              - blog
+            attributes:
+              type: object
+              required:
+              - name
+              - email
+              - api_secret
+              - merchant_id
+              - created_at
+              - updated_at
+              properties:
+                name:
+                  type: string
+                  description: Name of a member
+                email:
+                  type: string
+                  description: Email of a member
+                api_secret:
+                  type: string
+                  description: API secret for a member (required for api calls)
+                merchant_id:
+                  type: string
+                  description: Parent Merchant
+                created_at:
+                  type: string
+                  description: Created at timestamp
+                updated_at:
+                  type: string
+                  description: Updated at timestamp
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
