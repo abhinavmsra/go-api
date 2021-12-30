@@ -2,9 +2,9 @@ package repository
 
 import "database/sql"
 
-func (s *Storage) IndexMember(merchantId int) (*sql.Rows, error) {
-	query := `SELECT * FROM "members" WHERE "members"."merchant_id" = $1 ORDER BY created_at DESC LIMIT 25;`
-	return s.db.Query(query, merchantId)
+func (s *Storage) IndexMember(merchantId int, limit int, offset int) (*sql.Rows, error) {
+	query := `SELECT * FROM "members" WHERE "members"."merchant_id" = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3;`
+	return s.db.Query(query, merchantId, limit, offset)
 }
 
 func (s *Storage) CreateMember(name string, secret string, email string, merchantId int) *sql.Row {

@@ -2,9 +2,9 @@ package repository
 
 import "database/sql"
 
-func (s *Storage) IndexMerchant() (*sql.Rows, error) {
-	query := `SELECT * FROM "merchants" ORDER BY created_at DESC LIMIT 25;`
-	return s.db.Query(query)
+func (s *Storage) IndexMerchant(limit int, offset int) (*sql.Rows, error) {
+	query := `SELECT * FROM "merchants" ORDER BY created_at DESC LIMIT $1 OFFSET $2;`
+	return s.db.Query(query, limit, offset)
 }
 
 func (s *Storage) CreateMerchant(name string, secret string) *sql.Row {

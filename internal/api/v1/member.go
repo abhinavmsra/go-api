@@ -6,6 +6,7 @@ import (
 	"github.com/google/jsonapi"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/abhinavmsra/go-api/internal/api"
@@ -40,7 +41,18 @@ func IndexMember(storage repository.Storage) func(c *gin.Context) {
 			return
 		}
 
-		rows, err := storage.IndexMember(merchant.Id)
+		var page int
+		var perPage int
+
+		if page, err = strconv.Atoi(c.Query("page")); err != nil {
+			page = 1
+		}
+
+		if perPage, err = strconv.Atoi(c.Query("per_page")); err != nil {
+			perPage = 25
+		}
+
+		rows, err := storage.IndexMember(merchant.Id, perPage, (page-1)*perPage)
 		if err != nil {
 			log.Printf("[ERROR]: %v", err)
 			c.JSON(http.StatusInternalServerError, err)
