@@ -1,19 +1,45 @@
 package v1
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/jsonapi"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/abhinavmsra/go-api/internal/api"
 	"github.com/abhinavmsra/go-api/internal/repository"
 )
 
+func getAdminByAuthHeader(storage repository.Storage, auth string) (*api.Admin, error) {
+	var admin = new(api.Admin)
+
+	parts := strings.Split(auth, " ")
+	row := storage.FindAdminBySecret(parts[1])
+
+	if row.Err() != nil {
+		return admin, errors.New("Invalid Bearer Token")
+	}
+
+	if err := row.Scan(&admin.Id, &admin.CreatedAt, &admin.UpdatedAt, &admin.Name, &admin.Secret); err != nil {
+		return admin, errors.New("Invalid Bearer Token")
+	}
+
+	return admin, nil
+}
+
 func IndexMerchant(storage repository.Storage) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
+
+		_, err := getAdminByAuthHeader(storage, c.Request.Header.Get("Authorization"))
+		if err != nil {
+			log.Printf("[ERROR]: %v", err)
+			c.JSON(http.StatusForbidden, "")
+			return
+		}
 
 		rows, err := storage.IndexMerchant()
 		if err != nil {
@@ -48,9 +74,14 @@ func CreateMerchant(storage repository.Storage) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
 
-		var merchant = new(api.Merchant)
-		var err error
+		_, err := getAdminByAuthHeader(storage, c.Request.Header.Get("Authorization"))
+		if err != nil {
+			log.Printf("[ERROR]: %v", err)
+			c.JSON(http.StatusForbidden, "")
+			return
+		}
 
+		var merchant = new(api.Merchant)
 		if err = jsonapi.UnmarshalPayload(c.Request.Body, merchant); err != nil {
 			log.Printf("[ERROR]: %v", err)
 			c.JSON(http.StatusBadRequest, err.Error())
@@ -84,8 +115,14 @@ func CreateMerchant(storage repository.Storage) func(c *gin.Context) {
 
 func ShowMerchant(storage repository.Storage) func(c *gin.Context) {
 	return func(c *gin.Context) {
+		_, err := getAdminByAuthHeader(storage, c.Request.Header.Get("Authorization"))
+		if err != nil {
+			log.Printf("[ERROR]: %v", err)
+			c.JSON(http.StatusForbidden, "")
+			return
+		}
+
 		var merchant = new(api.Merchant)
-		var err error
 
 		c.Header("Content-Type", "application/json")
 		id := c.Param("id")
@@ -114,19 +151,24 @@ func ShowMerchant(storage repository.Storage) func(c *gin.Context) {
 
 func UpdateMerchant(storage repository.Storage) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		var merchant = new(api.Merchant)
-		var err error
-
 		c.Header("Content-Type", "application/json")
-		id := c.Param("id")
 
-		if err = jsonapi.UnmarshalPayload(c.Request.Body, merchant); err != nil {
+		merchant, err := GetMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
+		id := strconv.Itoa(merchant.Id)
+		if err != nil || id != c.Param("id") {
+			log.Printf("[ERROR]: %v", err)
+			c.JSON(http.StatusForbidden, "")
+			return
+		}
+
+		var updatedMerchant = new(api.Merchant)
+		if err = jsonapi.UnmarshalPayload(c.Request.Body, updatedMerchant); err != nil {
 			log.Printf("[ERROR]: %v", err)
 			c.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
 
-		row := storage.UpdateMerchant(id, merchant.Name)
+		row := storage.UpdateMerchant(id, updatedMerchant.Name)
 		if row.Err() != nil {
 			log.Printf("[ERROR]: %v", row.Err())
 			c.JSON(http.StatusBadRequest, row.Err())
@@ -153,7 +195,15 @@ func DeleteMerchant(storage repository.Storage) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
 
-		if row := storage.DeleteMerchant(c.Param("id")); row.Err() != nil {
+		merchant, err := GetMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
+		id := strconv.Itoa(merchant.Id)
+		if err != nil || id != c.Param("id") {
+			log.Printf("[ERROR]: %v", err)
+			c.JSON(http.StatusForbidden, "")
+			return
+		}
+
+		if row := storage.DeleteMerchant(id); row.Err() != nil {
 			log.Printf("[ERROR]: %v", row.Err())
 			c.JSON(http.StatusNotFound, row.Err())
 			return

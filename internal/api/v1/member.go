@@ -12,7 +12,7 @@ import (
 	"github.com/abhinavmsra/go-api/internal/repository"
 )
 
-func getMerchantByAuthHeader(storage repository.Storage, auth string) (*api.Merchant, error) {
+func GetMerchantByAuthHeader(storage repository.Storage, auth string) (*api.Merchant, error) {
 	var merchant = new(api.Merchant)
 
 	parts := strings.Split(auth, " ")
@@ -33,10 +33,10 @@ func IndexMember(storage repository.Storage) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
 
-		merchant, err := getMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
+		merchant, err := GetMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
 		if err != nil {
 			log.Printf("[ERROR]: %v", err)
-			c.JSON(http.StatusForbidden, err)
+			c.JSON(http.StatusForbidden, "")
 			return
 		}
 
@@ -73,10 +73,10 @@ func CreateMember(storage repository.Storage) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
 
-		merchant, err := getMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
+		merchant, err := GetMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
 		if err != nil {
 			log.Printf("[ERROR]: %v", err)
-			c.JSON(http.StatusForbidden, err)
+			c.JSON(http.StatusForbidden, "")
 			return
 		}
 
@@ -116,10 +116,10 @@ func ShowMember(storage repository.Storage) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
 
-		merchant, err := getMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
+		merchant, err := GetMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
 		if err != nil {
 			log.Printf("[ERROR]: %v", err)
-			c.JSON(http.StatusForbidden, err)
+			c.JSON(http.StatusForbidden, "")
 			return
 		}
 
@@ -152,10 +152,10 @@ func UpdateMember(storage repository.Storage) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
 
-		merchant, err := getMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
+		merchant, err := GetMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
 		if err != nil {
 			log.Printf("[ERROR]: %v", err)
-			c.JSON(http.StatusForbidden, err)
+			c.JSON(http.StatusForbidden, "")
 			return
 		}
 
@@ -195,10 +195,10 @@ func DeleteMember(storage repository.Storage) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		c.Header("Content-Type", "application/json")
 
-		merchant, err := getMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
+		merchant, err := GetMerchantByAuthHeader(storage, c.Request.Header.Get("Authorization"))
 		if err != nil {
 			log.Printf("[ERROR]: %v", err)
-			c.JSON(http.StatusForbidden, err)
+			c.JSON(http.StatusForbidden, "")
 			return
 		}
 
